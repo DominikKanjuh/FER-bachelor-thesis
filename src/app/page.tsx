@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div> pero</div>;
+  return <div className="text-Neturals text-netu"> pero</div>;
 }
