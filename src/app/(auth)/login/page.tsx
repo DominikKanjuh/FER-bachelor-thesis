@@ -11,9 +11,8 @@ import Image from 'next/image';
 import Logo from '../../../../public/CV-improver.svg';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-import { actionLoginUser } from '@/lib/server-actions/auth-actions';
 import Loader from '@/components/global/Loader';
+import { actionLoginUser } from '@/lib/server-actions/auth-actions';
 
 const LoginPage = () => {
   const router = useRouter();
