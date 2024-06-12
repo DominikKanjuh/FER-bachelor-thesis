@@ -1,20 +1,8 @@
 import { json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
-  name: text('name').notNull(),
-  email: text('email').unique().notNull(),
-  password: text('password').notNull(),
-});
-
 export const cvs = pgTable('cvs', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
-  user_id: uuid('user_id')
-    .references(() => users.id, {
-      onDelete: 'cascade',
-    })
-    .notNull(),
-  created_at: timestamp('created_at', {
+  createdAt: timestamp('created_at', {
     withTimezone: true,
     mode: 'string',
   })
@@ -26,5 +14,8 @@ export const cvs = pgTable('cvs', {
   })
     .defaultNow()
     .notNull(),
-  resume: json('resume').notNull(),
+  cvOwner: uuid('cv_owner').notNull(),
+  title: text('title').notNull(),
+  inTrash: text('in_trash'),
+  template: json('template').notNull(),
 });

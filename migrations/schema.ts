@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, pgEnum, uuid, timestamp, json, unique, text } from "drizzle-orm/pg-core"
+import { pgTable, pgEnum, uuid, timestamp, text, json } from "drizzle-orm/pg-core"
 
 import { sql } from "drizzle-orm"
 export const keyStatus = pgEnum("key_status", ['expired', 'invalid', 'valid', 'default'])
@@ -14,20 +14,18 @@ export const action = pgEnum("action", ['ERROR', 'TRUNCATE', 'DELETE', 'UPDATE',
 
 export const cvs = pgTable("cvs", {
 	id: uuid("id").defaultRandom().primaryKey().notNull(),
-	userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" } ),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	resume: json("resume").notNull(),
+	cvOwner: uuid("cv_owner").notNull(),
+	title: text("title").notNull(),
+	inTrash: text("in_trash"),
+	template: json("template").notNull(),
 });
 
 export const users = pgTable("users", {
 	id: uuid("id").primaryKey().notNull(),
-	name: text("name").notNull(),
+	fullName: text("full_name"),
+	avatarUrl: text("avatar_url"),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }),
 	email: text("email"),
-	password: text("password").notNull(),
-},
-(table) => {
-	return {
-		usersEmailUnique: unique("users_email_unique").on(table.email),
-	}
 });

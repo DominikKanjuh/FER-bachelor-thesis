@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1717451206162,
-      "tag": "0000_yellow_warlock",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1717451514983,
-      "tag": "0001_sleepy_gladiator",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1717451637985,
-      "tag": "0002_warm_bloodstrike",
+      "when": 1718151950562,
+      "tag": "0000_right_human_cannonball",
       "breakpoints": true
     }
   ]

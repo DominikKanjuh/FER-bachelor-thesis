@@ -4,6 +4,7 @@ import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/lib';
 import { cn } from '@/lib/utils';
+import db from '@/lib/supabase/db';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -17,6 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // console.log(db);
   return (
     <html lang="en">
       <body className={cn('bg-background', dmSans.className)}>
