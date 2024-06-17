@@ -28,3 +28,15 @@ export async function actionSignUpUser({ email, password }: z.infer<typeof FormS
   });
   return response;
 }
+
+export async function actionLogoutUser() {
+  const supabase = createRouteHandlerClient({ cookies });
+  const response = await supabase.auth.signOut();
+  return response;
+}
+
+export async function isUserAuthenticated() {
+  const supabase = createRouteHandlerClient({ cookies });
+  const session = supabase.auth.getSession();
+  return session;
+}
