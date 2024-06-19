@@ -1,22 +1,22 @@
 import { isUserAuthenticated } from '@/lib/server-actions/auth-actions';
 import Link from 'next/link';
 import React from 'react';
-import { Button } from '../ui/button';
 
 const UserButton = async () => {
   const { data, error } = await isUserAuthenticated();
+  const { session } = data;
 
-  if (!data || error) {
+  if (!session || error) {
     return (
-      <Link href="/login">
-        <Button>Login</Button>
+      <Link href="/login" className="cursor-pointer underline-offset-4 hover:underline">
+        Login
       </Link>
     );
   }
 
   return (
-    <Link href="/dashboard">
-      <Button>Go to dashboard</Button>
+    <Link href="/dashboard" className="cursor-pointer underline-offset-4 hover:underline">
+      Dashboard
     </Link>
   );
 };

@@ -1,4 +1,3 @@
-import { ThemeSwitcher } from '@/components/global';
 import React from 'react';
 
 const Dashboard = () => {
