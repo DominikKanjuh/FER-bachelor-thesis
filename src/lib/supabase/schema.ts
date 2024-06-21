@@ -1,4 +1,4 @@
-import { json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const cvs = pgTable('cvs', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
@@ -14,7 +14,7 @@ export const cvs = pgTable('cvs', {
   })
     .defaultNow()
     .notNull(),
-  inTrash: text('in_trash').default('false').notNull(),
+  inTrash: boolean('in_trash').default(false).notNull(),
   cvOwner: uuid('cv_owner').notNull(),
   title: text('title').notNull(),
   description: text('description'),

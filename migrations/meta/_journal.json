@@ -15,6 +15,13 @@
       "when": 1718950570875,
       "tag": "0001_tiny_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1718962341177,
+      "tag": "0002_fancy_la_nuit",
+      "breakpoints": true
     }
   ]
 }
