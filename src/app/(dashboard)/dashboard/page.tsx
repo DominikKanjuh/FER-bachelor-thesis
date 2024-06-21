@@ -1,5 +1,4 @@
-import { CvCard } from '@/components/global';
-import CreateCVButton from '@/components/global/CreateCVCard';
+import { CVCard, CreateCVButton } from '@/components/global';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,23 +8,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import db from '@/lib/supabase/db';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+
+import { getAllCVs } from '@/lib/server-actions/get-all-cvs';
+
 import { ArrowUpDownIcon } from 'lucide-react';
-import { cookies } from 'next/headers';
 
 const Dashboard = async () => {
-  const supabase = createServerComponentClient({ cookies });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return;
-
-  const cvs = await db.query.cvs.findMany({
-    where: (cv, { eq }) => eq(cv.cvOwner, user.id),
-  });
+  const cvs = await getAllCVs();
 
   return (
     <div className="p-4 md:p-6">
@@ -70,16 +59,16 @@ const Dashboard = async () => {
       </div>
 
       <div className="flex w-full h-full justify-center items-center">
-        {cvs.length === 0 ? (
+        {!cvs || cvs.length === 0 ? (
           <div className="flex w-full h-full justify-center items-center text-md md:text-xl">
             You have no CVs yet. Create a new one by clicking the button above.
           </div>
         ) : (
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {cvs.map((cv) => (
-              <CvCard
+              <CVCard
                 key={cv.id}
-                id={Number(cv.id)}
+                id={cv.id}
                 title={cv.title}
                 description={cv.description}
                 createdAt={new Date(cv.createdAt)}

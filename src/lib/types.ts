@@ -9,5 +9,5 @@ export const LoginSchema = z.object({
 
 export const CVCreationSchema = z.object({
   title: z.string(),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
 });

@@ -5,7 +5,7 @@ import './globals.css';
 import { ThemeProvider } from '@/lib';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import db from '@/lib/supabase/db';
+// import db from '@/lib/supabase/db';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -19,7 +19,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log(db);
+  // console.log(db);
 
   return (
     <html lang="en">

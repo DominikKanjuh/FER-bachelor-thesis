@@ -1,23 +1,24 @@
 import Link from 'next/link';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDateToTimeDate } from '@/lib/utils';
 import { Bot } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
   createdAt: Date;
   modifiedAt: Date;
 }
 
-const CvCard = ({ id, title, description, createdAt, modifiedAt }: Props) => {
+const CVCard = ({ id, title, description, createdAt, modifiedAt }: Props) => {
   return (
     <Card id="id">
       <CardHeader>
         <CardTitle className="truncate line-clamp-2">{title}</CardTitle>
-        {description && <CardDescription className="truncate line-clamp-3">{description}</CardDescription>}
+        <CardDescription className="truncate line-clamp-3">{description ? description : '-'}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-2 text-sm">
         <div className="flex items-center justify-between">
@@ -30,7 +31,7 @@ const CvCard = ({ id, title, description, createdAt, modifiedAt }: Props) => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Link href={`/cv/${id}`}>
+        <Link href={`/dashboard/cv/${id}`}>
           <Button variant="secondary" size="sm">
             <Bot className="mr-2" size={'20'} />
             Edit with AI
@@ -41,4 +42,4 @@ const CvCard = ({ id, title, description, createdAt, modifiedAt }: Props) => {
   );
 };
 
-export default CvCard;
+export default CVCard;

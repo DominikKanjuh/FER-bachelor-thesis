@@ -4,4 +4,4 @@ export { default as Logo } from './Logo';
 export { default as UserButton } from './UserButton';
 export { default as Header } from './Header';
 
-export { default as CvCard } from './CvCard';
+export * from './cv';

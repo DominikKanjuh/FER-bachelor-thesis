@@ -3,10 +3,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/form';
 
 import { useRouter } from 'next/navigation';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,33 +15,32 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
-import { Textarea } from '../ui/textarea';
-import { toast } from '../ui/use-toast';
-import { Input } from '../ui/input';
-import Loader from './Loader';
+} from '../../ui/dialog';
+import { Textarea } from '../../ui/textarea';
+import { toast } from '../../ui/use-toast';
+import { Input } from '../../ui/input';
+import Loader from '../Loader';
 import { FilePlus2 } from 'lucide-react';
-import { z } from 'zod';
 import { CVCreationSchema } from '@/lib';
-import { createCV } from '@/lib/supabase/queries';
 
-export type CVCreationSchemaType = z.infer<typeof CVCreationSchema>;
+import { CvInsert } from '@/lib/drizzle/schema';
+import { createCV } from '@/lib/server-actions/create-cv';
 
 function CreateCVButton() {
   const router = useRouter();
-  const form = useForm<CVCreationSchemaType>({
+  const form = useForm<CvInsert>({
     resolver: zodResolver(CVCreationSchema),
   });
 
-  async function onSubmit(values: CVCreationSchemaType) {
+  async function onSubmit(values: CvInsert) {
     try {
-      // @ts-ignore
       const cvId = await createCV(values);
       toast({
         title: 'Success',
         description: 'CV created successfully. You will be redirected to the CV editor.',
       });
-      router.push(`/cv/${cvId}`);
+
+      router.push(`/dashboard/cv/${cvId}`);
     } catch (error) {
       toast({
         title: 'Error',
@@ -86,6 +85,7 @@ function CreateCVButton() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
+                    {/* @ts-expect-error */}
                     <Textarea rows={4} {...field} />
                   </FormControl>
                   <FormMessage />

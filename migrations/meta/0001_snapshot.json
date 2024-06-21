@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "560d2b84-1bd6-4f5a-8b64-bd05d8e82785",
-  "prevId": "9b3fba13-7be7-4aa8-9cf4-47b8485e3016",
+  "id": "6fd0675b-00c3-4d0e-9375-7ee3400a7176",
+  "prevId": "cd883367-3be1-4b53-8a09-a8cdff2cec06",
   "tables": {
     "cvs": {
       "name": "cvs",
@@ -31,9 +31,10 @@
         },
         "in_trash": {
           "name": "in_trash",
-          "type": "text",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": false
         },
         "cv_owner": {
           "name": "cv_owner",
@@ -57,7 +58,62 @@
           "name": "template",
           "type": "json",
           "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cvs_cv_owner_users_id_fk": {
+          "name": "cvs_cv_owner_users_id_fk",
+          "tableFrom": "cvs",
+          "tableTo": "users",
+          "columnsFrom": [
+            "cv_owner"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

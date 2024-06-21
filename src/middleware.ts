@@ -20,29 +20,28 @@ export async function middleware(req: NextRequest) {
       new URL(`/signup?error_description=${req.nextUrl.searchParams.get('error_description')}`, req.url)
     );
   }
-
   if (['/login', '/signup'].includes(req.nextUrl.pathname)) {
     if (session) {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
   }
 
-  if (req.nextUrl.pathname.startsWith('/cv')) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
+  // if (req.nextUrl.pathname.startsWith('/dashboard/cv')) {
+  //   const {
+  //     data: { user },
+  //   } = await supabase.auth.getUser();
+  //   if (!user) {
+  //     return NextResponse.redirect(new URL('/login', req.url));
+  //   }
 
-    const cvId = req.nextUrl.pathname.split('/').pop();
+  //   const cvId = req.nextUrl.pathname.split('/').pop();
 
-    const { data: cv } = await supabase.from('cvs').select('*').eq('id', cvId).eq('cvOwner', user.id);
+  //   const { data: cv } = await supabase.from('cvs').select('*').eq('id', cvId).eq('cvOwner', user.id);
 
-    if (!cv || !cv.length) {
-      return NextResponse.rewrite(new URL('/not-found', req.url));
-    }
-  }
+  //   if (!cv || !cv.length) {
+  //     return NextResponse.rewrite(new URL('/not-found', req.url));
+  //   }
+  // }
 
   return res;
 }
