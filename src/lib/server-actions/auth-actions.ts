@@ -2,10 +2,10 @@
 
 import { z } from 'zod';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { FormSchema } from '../types';
+import { LoginSchema } from '../types';
 import { cookies } from 'next/headers';
 
-export async function actionLoginUser({ email, password }: z.infer<typeof FormSchema>) {
+export async function actionLoginUser({ email, password }: z.infer<typeof LoginSchema>) {
   const supabase = createRouteHandlerClient({ cookies });
   const response = await supabase.auth.signInWithPassword({
     email,
@@ -14,7 +14,7 @@ export async function actionLoginUser({ email, password }: z.infer<typeof FormSc
   return response;
 }
 
-export async function actionSignUpUser({ email, password }: z.infer<typeof FormSchema>) {
+export async function actionSignUpUser({ email, password }: z.infer<typeof LoginSchema>) {
   const supabase = createRouteHandlerClient({ cookies });
   const { data } = await supabase.from('profiles').select('*').eq('email', email);
 
@@ -29,11 +29,11 @@ export async function actionSignUpUser({ email, password }: z.infer<typeof FormS
   return response;
 }
 
-export async function actionLogoutUser() {
-  const supabase = createRouteHandlerClient({ cookies });
-  const response = await supabase.auth.signOut();
-  return response;
-}
+// export async function actionLogoutUser() {
+//   const supabase = createRouteHandlerClient({ cookies });
+//   const response = await supabase.auth.signOut();
+//   return response;
+// }
 
 export async function isUserAuthenticated() {
   const supabase = createRouteHandlerClient({ cookies });

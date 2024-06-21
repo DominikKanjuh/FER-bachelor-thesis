@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
@@ -16,25 +16,36 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import { Textarea } from '../ui/textarea';
+import { toast } from '../ui/use-toast';
+import { Input } from '../ui/input';
+import Loader from './Loader';
+import { FilePlus2 } from 'lucide-react';
+import { z } from 'zod';
+import { CVCreationSchema } from '@/lib';
+import { createCV } from '@/lib/supabase/queries';
 
-function CreateFormBtn() {
+export type CVCreationSchemaType = z.infer<typeof CVCreationSchema>;
+
+function CreateCVButton() {
   const router = useRouter();
-  const form = useForm<formSchemaType>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CVCreationSchemaType>({
+    resolver: zodResolver(CVCreationSchema),
   });
 
-  async function onSubmit(values: formSchemaType) {
+  async function onSubmit(values: CVCreationSchemaType) {
     try {
-      const formId = await CreateForm(values);
+      // @ts-ignore
+      const cvId = await createCV(values);
       toast({
         title: 'Success',
-        description: 'Form created successfully',
+        description: 'CV created successfully. You will be redirected to the CV editor.',
       });
-      router.push(`/builder/${formId}`);
+      router.push(`/cv/${cvId}`);
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Something went wrong, please try again later',
+        description: 'Something went wrong, please try again.',
         variant: 'destructive',
       });
     }
@@ -43,12 +54,9 @@ function CreateFormBtn() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant={'outline'}
-          className="group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4"
-        >
-          <BsFileEarmarkPlus className="h-8 w-8 text-muted-foreground group-hover:text-primary" />
-          <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">Create new form</p>
+        <Button>
+          <FilePlus2 className="mr-2" size={'20'} />
+          Add new CV
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -60,10 +68,10 @@ function CreateFormBtn() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <FormField
               control={form.control}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -78,7 +86,7 @@ function CreateFormBtn() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea rows={5} {...field} />
+                    <Textarea rows={4} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,8 +96,8 @@ function CreateFormBtn() {
         </Form>
         <DialogFooter>
           <Button onClick={form.handleSubmit(onSubmit)} disabled={form.formState.isSubmitting} className="w-full mt-4">
-            {!form.formState.isSubmitting && <span>Save</span>}
-            {form.formState.isSubmitting && <ImSpinner2 className="animate-spin" />}
+            {!form.formState.isSubmitting && <span>Create</span>}
+            {form.formState.isSubmitting && <Loader />}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -97,4 +105,4 @@ function CreateFormBtn() {
   );
 }
 
-export default CreateFormBtn;
+export default CreateCVButton;

@@ -15,7 +15,7 @@ import Logo from '../../../../public/CV-improver.svg';
 import Loader from '@/components/global/Loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { MailCheck } from 'lucide-react';
-import { FormSchema } from '@/lib/types';
+import { LoginSchema } from '@/lib/types';
 import { actionSignUpUser } from '@/lib/server-actions/auth-actions';
 
 const SignUpFormSchema = z
@@ -58,7 +58,7 @@ const Signup = () => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async ({ email, password }: z.infer<typeof FormSchema>) => {
+  const onSubmit = async ({ email, password }: z.infer<typeof LoginSchema>) => {
     const { error } = await actionSignUpUser({ email, password });
     if (error) {
       setSubmitError(error.message);

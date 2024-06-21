@@ -1,4 +1,5 @@
 import { CvCard } from '@/components/global';
+import CreateCVButton from '@/components/global/CreateCVCard';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,24 +9,31 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import db from '@/lib/supabase/db';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { ArrowUpDownIcon } from 'lucide-react';
-import React from 'react';
+import { cookies } from 'next/headers';
 
-const MOCK_DATA = Array.from({ length: 10 }, (_, index) => ({
-  id: index + 1,
-  title: `Sample Title ${index + 1}`,
-  description: `This is a sample description for the card number ${index + 1}.`,
-  createdAt: new Date(),
-  modifiedAt: new Date(),
-}));
+const Dashboard = async () => {
+  const supabase = createServerComponentClient({ cookies });
 
-const Dashboard = () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const cvs = await db.query.cvs.findMany({
+    where: (cv, { eq }) => eq(cv.cvOwner, user.id),
+  });
+
   return (
     <div className="p-4 md:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center mb-8">
         <div className="flex-1">
           <Input placeholder="Search CVs by title..." />
         </div>
+
         <div className="flex justify-between items-center gap-4">
           <div className="flex gap-4">
             <DropdownMenu>
@@ -57,21 +65,29 @@ const Dashboard = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Button>Add new CV</Button>
+          <CreateCVButton />
         </div>
       </div>
 
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {MOCK_DATA.map((cv) => (
-          <CvCard
-            key={cv.id}
-            id={cv.id}
-            title={cv.title}
-            description={cv.description}
-            createdAt={cv.createdAt}
-            modifiedAt={cv.modifiedAt}
-          />
-        ))}
+      <div className="flex w-full h-full justify-center items-center">
+        {cvs.length === 0 ? (
+          <div className="flex w-full h-full justify-center items-center text-md md:text-xl">
+            You have no CVs yet. Create a new one by clicking the button above.
+          </div>
+        ) : (
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {cvs.map((cv) => (
+              <CvCard
+                key={cv.id}
+                id={Number(cv.id)}
+                title={cv.title}
+                description={cv.description}
+                createdAt={new Date(cv.createdAt)}
+                modifiedAt={new Date(cv.updatedAt)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export const cvs = pgTable('cvs', {
   })
     .defaultNow()
     .notNull(),
-  inTrash: text('in_trash'),
+  inTrash: text('in_trash').default('false').notNull(),
   cvOwner: uuid('cv_owner').notNull(),
   title: text('title').notNull(),
   description: text('description'),

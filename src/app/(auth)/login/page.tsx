@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormSchema } from '@/lib/types';
+import { LoginSchema } from '@/lib/types';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -18,15 +18,15 @@ const LoginPage = () => {
   const router = useRouter();
   const [submitError, setSubmitError] = useState('');
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<z.infer<typeof LoginSchema>>({
     mode: 'onChange',
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(LoginSchema),
     defaultValues: { email: '', password: '' },
   });
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (formData) => {
+  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = async (formData) => {
     const { error } = await actionLoginUser(formData);
     if (error) {
       form.reset();

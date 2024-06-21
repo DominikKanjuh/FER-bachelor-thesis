@@ -1,4 +1,5 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
@@ -25,5 +26,23 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
   }
+
+  if (req.nextUrl.pathname.startsWith('/cv')) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+
+    const cvId = req.nextUrl.pathname.split('/').pop();
+
+    const { data: cv } = await supabase.from('cvs').select('*').eq('id', cvId).eq('cvOwner', user.id);
+
+    if (!cv || !cv.length) {
+      return NextResponse.rewrite(new URL('/not-found', req.url));
+    }
+  }
+
   return res;
 }
