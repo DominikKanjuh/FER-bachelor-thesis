@@ -13,13 +13,48 @@ import { Input } from '@/components/ui/input';
 import { CVType } from '@/lib/drizzle/types';
 
 import { ArrowUpDownIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-const Dashboard = ({ cvs }: { cvs?: CVType[] }) => {
+enum SortBy {
+  DateCreated = 'date_created',
+  DateModified = 'date_modified',
+}
+
+enum SortOrder {
+  NewToOld = 'new_to_old',
+  OldToNew = 'old_to_new',
+}
+
+const Dashboard = ({ cvs: _cvs }: { cvs?: CVType[] }) => {
+  const [cvs, setCvs] = useState<CVType[] | undefined>(_cvs);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [sortBy, setSortBy] = useState<SortBy>(SortBy.DateCreated);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.NewToOld);
+
+  useEffect(() => {
+    if (!_cvs) return;
+
+    let filteredCVs = _cvs.sort((a, b) => {
+      const dateA = new Date(sortBy === 'date_created' ? a.createdAt : a.updatedAt);
+      const dateB = new Date(sortBy === 'date_created' ? b.createdAt : b.updatedAt);
+      return sortOrder === 'new_to_old' ? dateB.getTime() - dateA.getTime() : dateA.getTime() - dateB.getTime();
+    });
+
+    filteredCVs = filteredCVs.filter((cv) => cv.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    setCvs(filteredCVs);
+  }, [searchTerm, sortBy, sortOrder, _cvs]);
+
   return (
     <div className="p-4 md:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center mb-8">
         <div className="flex-1">
-          <Input placeholder="Search CVs by title..." />
+          <Input
+            placeholder="Search CVs by title..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
         <div className="flex justify-between items-center gap-4">
@@ -32,9 +67,9 @@ const Dashboard = ({ cvs }: { cvs?: CVType[] }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuRadioGroup value="date_created">
-                  <DropdownMenuRadioItem value="date_created">Date Created</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="date_modified">Date Modified</DropdownMenuRadioItem>
+                <DropdownMenuRadioGroup value={sortBy} onValueChange={(e) => setSortBy(e as SortBy)}>
+                  <DropdownMenuRadioItem value={SortBy.DateCreated}>Date Created</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value={SortBy.DateModified}>Date Modified</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -46,9 +81,9 @@ const Dashboard = ({ cvs }: { cvs?: CVType[] }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuRadioGroup value="new_to_old">
-                  <DropdownMenuRadioItem value="new_to_old">New to Old</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="old_to_new">Old to New</DropdownMenuRadioItem>
+                <DropdownMenuRadioGroup value={sortOrder} onValueChange={(e) => setSortOrder(e as SortOrder)}>
+                  <DropdownMenuRadioItem value={SortOrder.NewToOld}>New to Old</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value={SortOrder.OldToNew}>Old to New</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
