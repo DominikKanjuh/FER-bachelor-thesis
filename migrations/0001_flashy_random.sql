@@ -1,1 +1,0 @@
-ALTER TABLE "cvs" ALTER COLUMN "template" DROP NOT NULL;

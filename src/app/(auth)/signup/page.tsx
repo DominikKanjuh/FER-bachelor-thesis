@@ -15,22 +15,11 @@ import Logo from '../../../../public/CV-improver.svg';
 import Loader from '@/components/global/Loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { MailCheck } from 'lucide-react';
-import { LoginSchema } from '@/lib/types';
 import { actionSignUpUser } from '@/lib/server-actions/auth-actions';
-
-const SignUpFormSchema = z
-  .object({
-    email: z.string().describe('Email').email({ message: 'Invalid Email' }),
-    password: z.string().describe('Password').min(6, 'Password must be minimum 6 characters'),
-    confirmPassword: z.string().describe('Confirm Password').min(6, 'Password must be minimum 6 characters'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match.",
-    path: ['confirmPassword'],
-  });
+import { SignUpFormSchema } from '@/lib/zod-schemas';
+import { toast } from '@/components/ui/use-toast';
 
 const Signup = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [submitError, setSubmitError] = useState('');
   const [confirmation, setConfirmation] = useState(false);
@@ -58,9 +47,14 @@ const Signup = () => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async ({ email, password }: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async ({ email, password }: z.infer<typeof SignUpFormSchema>) => {
     const { error } = await actionSignUpUser({ email, password });
     if (error) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
       setSubmitError(error.message);
       form.reset();
       return;

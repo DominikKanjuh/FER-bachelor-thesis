@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "6fd0675b-00c3-4d0e-9375-7ee3400a7176",
-  "prevId": "cd883367-3be1-4b53-8a09-a8cdff2cec06",
+  "id": "42ac226b-7139-465d-b16e-f882ee8bdac2",
+  "prevId": "d9ec2891-80a4-4063-9279-4b4a9a095bcd",
   "tables": {
     "cvs": {
       "name": "cvs",
@@ -54,8 +54,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "template": {
-          "name": "template",
+        "content": {
+          "name": "content",
           "type": "json",
           "primaryKey": false,
           "notNull": false

@@ -2,10 +2,10 @@ import { Header } from '@/components/global';
 
 const DashboardLayout = ({ children }: React.PropsWithChildren) => {
   return (
-    <>
+    <main className="w-full h-full">
       <Header />
-      <main className="w-full h-full">{children}</main>
-    </>
+      {children}
+    </main>
   );
 };
 

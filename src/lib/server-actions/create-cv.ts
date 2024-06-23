@@ -2,10 +2,12 @@
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import db from '../drizzle/db';
-import { CvInsert, cvs } from '../drizzle/schema';
-import { cookies } from 'next/headers';
 
-export async function createCV(values: CvInsert) {
+import { cookies } from 'next/headers';
+import { CvInsertType } from '../drizzle/types';
+import { cvs } from '../drizzle/schema';
+
+export async function createCV(values: CvInsertType) {
   const supabase = createServerComponentClient({ cookies });
 
   const {
@@ -14,7 +16,10 @@ export async function createCV(values: CvInsert) {
 
   if (!user) return;
 
+  console.log('user', user);
+
   values.cvOwner = user.id;
+  console.log('values', values);
   return db
     .insert(cvs)
     .values(values)

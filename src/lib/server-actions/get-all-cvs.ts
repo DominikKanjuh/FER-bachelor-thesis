@@ -3,6 +3,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import db from '../drizzle/db';
+import { CVType } from '../drizzle/types';
 
 export const getAllCVs = async () => {
   const supabase = createServerComponentClient({ cookies });
@@ -11,11 +12,11 @@ export const getAllCVs = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return;
+  if (!user) return [];
 
   const cvs = await db.query.cvs.findMany({
     where: (cv, { eq }) => eq(cv.cvOwner, user.id),
   });
 
-  return cvs;
+  return cvs as CVType[];
 };

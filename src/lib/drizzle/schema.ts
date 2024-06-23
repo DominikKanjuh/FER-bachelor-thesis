@@ -1,4 +1,3 @@
-import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
@@ -12,9 +11,6 @@ export const users = pgTable('users', {
   }),
 });
 
-export type User = InferSelectModel<typeof users>;
-export type UserInsert = InferInsertModel<typeof users>;
-
 export const cvs = pgTable('cvs', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   createdAt: timestamp('created_at', {
@@ -23,7 +19,7 @@ export const cvs = pgTable('cvs', {
   })
     .defaultNow()
     .notNull(),
-  updated_at: timestamp('updated_at', {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
     mode: 'string',
   })
@@ -35,8 +31,5 @@ export const cvs = pgTable('cvs', {
     .references(() => users.id),
   title: text('title').notNull(),
   description: text('description'),
-  content: json('template'),
+  content: json('content'),
 });
-
-export type Cv = InferSelectModel<typeof cvs>;
-export type CvInsert = InferInsertModel<typeof cvs>;

@@ -23,16 +23,16 @@ import Loader from '../Loader';
 import { FilePlus2 } from 'lucide-react';
 import { CVCreationSchema } from '@/lib';
 
-import { CvInsert } from '@/lib/drizzle/schema';
 import { createCV } from '@/lib/server-actions/create-cv';
+import { CvInsertType } from '@/lib/drizzle/types';
 
 function CreateCVButton() {
   const router = useRouter();
-  const form = useForm<CvInsert>({
+  const form = useForm<CvInsertType>({
     resolver: zodResolver(CVCreationSchema),
   });
 
-  async function onSubmit(values: CvInsert) {
+  async function onSubmit(values: CvInsertType) {
     try {
       const cvId = await createCV(values);
       toast({

@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { LoginSchema } from '../types';
+import { LoginSchema } from '../zod-schemas';
 import { cookies } from 'next/headers';
 
 export async function actionLoginUser({ email, password }: z.infer<typeof LoginSchema>) {

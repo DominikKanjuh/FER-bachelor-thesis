@@ -1,4 +1,4 @@
-import { pgTable, pgEnum, uuid, timestamp, text, json } from 'drizzle-orm/pg-core';
+import { pgTable, foreignKey, pgEnum, uuid, timestamp, boolean, text, json } from 'drizzle-orm/pg-core';
 
 import { sql } from 'drizzle-orm';
 export const keyStatus = pgEnum('key_status', ['default', 'valid', 'invalid', 'expired']);
@@ -34,11 +34,13 @@ export const cvs = pgTable('cvs', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-  cvOwner: uuid('cv_owner').notNull(),
+  inTrash: boolean('in_trash').default(false).notNull(),
+  cvOwner: uuid('cv_owner')
+    .notNull()
+    .references(() => users.id),
   title: text('title').notNull(),
-  inTrash: text('in_trash'),
-  template: json('template').notNull(),
   description: text('description'),
+  content: json('content'),
 });
 
 export const users = pgTable('users', {
@@ -46,5 +48,5 @@ export const users = pgTable('users', {
   fullName: text('full_name'),
   avatarUrl: text('avatar_url'),
   updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }),
-  email: text('email'),
+  email: text('email').notNull(),
 });

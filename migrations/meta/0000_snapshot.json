@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "cd883367-3be1-4b53-8a09-a8cdff2cec06",
+  "id": "d9ec2891-80a4-4063-9279-4b4a9a095bcd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "cvs": {
@@ -54,64 +54,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "template": {
-          "name": "template",
+        "content": {
+          "name": "content",
           "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "cvs_cv_owner_users_id_fk": {
-          "name": "cvs_cv_owner_users_id_fk",
-          "tableFrom": "cvs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "cv_owner"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "full_name": {
-          "name": "full_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "avatar_url": {
-          "name": "avatar_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
