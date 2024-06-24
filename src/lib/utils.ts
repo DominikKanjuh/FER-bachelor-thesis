@@ -25,3 +25,7 @@ export function formatDateToTimeDate(date: Date): string {
 
   return `${timeString}, ${dateString.replace(/\//g, '.')}`;
 }
+
+export function stringToBoolean(str: string): boolean {
+  return str === 'true';
+}

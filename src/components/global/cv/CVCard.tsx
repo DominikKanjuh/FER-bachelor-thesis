@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { formatDateToTimeDate } from '@/lib/utils';
 import { Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import DeleteCVButton from './DeleteCVButton';
 
 interface Props {
   id: string;
@@ -11,9 +12,10 @@ interface Props {
   description: string | null;
   createdAt: Date;
   modifiedAt: Date;
+  inTrash: boolean;
 }
 
-const CVCard = ({ id, title, description, createdAt, modifiedAt }: Props) => {
+const CVCard = ({ id, title, description, createdAt, modifiedAt, inTrash }: Props) => {
   return (
     <Card id="id">
       <CardHeader>
@@ -30,7 +32,8 @@ const CVCard = ({ id, title, description, createdAt, modifiedAt }: Props) => {
           <span>{formatDateToTimeDate(modifiedAt)}</span>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end">
+      <CardFooter className="flex justify-between gap-2">
+        <DeleteCVButton cvId={id} inTrash={inTrash} />
         <Link href={`/dashboard/cv/${id}`}>
           <Button variant="secondary" size="sm">
             <Bot className="mr-2" size={'20'} />

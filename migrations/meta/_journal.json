@@ -15,6 +15,13 @@
       "when": 1719104500907,
       "tag": "0001_milky_argent",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1719171950367,
+      "tag": "0002_lethal_wild_pack",
+      "breakpoints": true
     }
   ]
 }

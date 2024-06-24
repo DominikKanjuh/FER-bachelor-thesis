@@ -10,9 +10,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Toggle } from '@/components/ui/toggle';
 import { CVType } from '@/lib/drizzle/types';
+import { stringToBoolean } from '@/lib/utils';
 
-import { ArrowUpDownIcon } from 'lucide-react';
+import { ArrowUpDownIcon, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 enum SortBy {
@@ -32,22 +34,31 @@ const Dashboard = ({ cvs: _cvs }: { cvs?: CVType[] }) => {
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.DateCreated);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.NewToOld);
 
+  const [inTrash, setInTrash] = useState('false');
+
   useEffect(() => {
     if (!_cvs) return;
 
-    let filteredCVs = _cvs.sort((a, b) => {
+    const sortedCVs = _cvs.sort((a, b) => {
       const dateA = new Date(sortBy === 'date_created' ? a.createdAt : a.updatedAt);
       const dateB = new Date(sortBy === 'date_created' ? b.createdAt : b.updatedAt);
       return sortOrder === 'new_to_old' ? dateB.getTime() - dateA.getTime() : dateA.getTime() - dateB.getTime();
     });
 
-    filteredCVs = filteredCVs.filter((cv) => cv.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredCVs = sortedCVs.filter((cv) => cv.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredCVsInTrash = filteredCVs.filter((cv) => cv.inTrash === stringToBoolean(inTrash));
 
-    setCvs(filteredCVs);
-  }, [searchTerm, sortBy, sortOrder, _cvs]);
+    setCvs(filteredCVsInTrash);
+  }, [searchTerm, sortBy, sortOrder, inTrash, _cvs]);
 
   return (
     <div className="p-4 md:p-6">
+      <section className="mb-6">
+        <h1 className="text-2xl font-semibold ">Your CVs</h1>
+        <p className="text-md text-muted-foreground">
+          {`Here you can create, view, edit or delete your CVs. Click on the "Edit with AI" button to start improving your CV.`}
+        </p>
+      </section>
       <div className="flex flex-col gap-4 md:flex-row md:items-center mb-8">
         <div className="flex-1">
           <Input
@@ -87,6 +98,15 @@ const Dashboard = ({ cvs: _cvs }: { cvs?: CVType[] }) => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Toggle
+              variant="outline"
+              value={inTrash}
+              onClick={() => setInTrash((prev) => (prev === 'true' ? 'false' : 'true'))}
+              aria-label="Toggle In Trash View"
+              name="Toggle In Trash View"
+            >
+              <Trash className="h-4 w-4" />
+            </Toggle>
           </div>
           <CreateCVButton />
         </div>
@@ -94,9 +114,15 @@ const Dashboard = ({ cvs: _cvs }: { cvs?: CVType[] }) => {
 
       <div className="flex w-full h-full justify-center items-center">
         {!cvs || cvs.length === 0 ? (
-          <div className="flex w-full h-full justify-center items-center text-md md:text-xl">
-            You have no CVs yet. Create a new one by clicking the button above.
-          </div>
+          stringToBoolean(inTrash) ? (
+            <div className="flex w-full h-full justify-center items-center text-md md:text-xl">
+              You have no CVs in the trash. Delete a CV by clicking the X icon on the CV card.
+            </div>
+          ) : (
+            <div className="flex w-full h-full justify-center items-center text-md md:text-xl">
+              You have no CVs yet. Create a new one by clicking the button above.
+            </div>
+          )
         ) : (
           <div className="w-full grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {cvs.map((cv) => (
@@ -107,6 +133,7 @@ const Dashboard = ({ cvs: _cvs }: { cvs?: CVType[] }) => {
                 description={cv.description}
                 createdAt={new Date(cv.createdAt)}
                 modifiedAt={new Date(cv.updatedAt)}
+                inTrash={cv.inTrash}
               />
             ))}
           </div>

@@ -1,5 +1,5 @@
 import { Dashboard } from '@/components/global/dashboard';
-import { getAllCVs } from '@/lib/server-actions/get-all-cvs';
+import { getAllCVs } from '@/lib/server-actions/cv-actions';
 
 const DashboardPage = async () => {
   const cvs = await getAllCVs();

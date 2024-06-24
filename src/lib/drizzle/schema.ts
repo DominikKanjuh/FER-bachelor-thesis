@@ -1,4 +1,4 @@
-import { boolean, json, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
@@ -31,5 +31,5 @@ export const cvs = pgTable('cvs', {
     .references(() => users.id),
   title: text('title').notNull(),
   description: text('description'),
-  content: json('content'),
+  content: jsonb('content'),
 });

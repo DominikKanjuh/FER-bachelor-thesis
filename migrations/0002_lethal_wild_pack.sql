@@ -1,0 +1,1 @@
+ALTER TABLE "cvs" ALTER COLUMN "content" SET DATA TYPE jsonb;
