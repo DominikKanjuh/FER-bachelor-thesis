@@ -6,6 +6,7 @@ import db from '../drizzle/db';
 import { cvs } from '../drizzle/schema';
 import { CVType, CvInsertType } from '../drizzle/types';
 import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
 export const getAllCVs = async () => {
   const supabase = createServerComponentClient({ cookies });
@@ -72,6 +73,8 @@ export async function deleteCV(cvId: string) {
   } else {
     await db.delete(cvs).where(eq(cvs.id, cvId));
   }
+
+  revalidatePath('/dashboard');
 }
 
 export async function removeFromTrashCV(cvId: string) {
@@ -92,4 +95,6 @@ export async function removeFromTrashCV(cvId: string) {
   if (cv.inTrash) {
     await db.update(cvs).set({ inTrash: false }).where(eq(cvs.id, cvId));
   }
+
+  revalidatePath('/dashboard');
 }

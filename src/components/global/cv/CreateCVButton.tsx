@@ -54,8 +54,8 @@ function CreateCVButton() {
     <Dialog>
       <DialogTrigger asChild>
         <Button>
-          <FilePlus2 className="mr-2" size={'20'} />
-          Add new CV
+          <FilePlus2 className="mr-0 sm:mr-2" size={'20'} />
+          <span className="hidden sm:block">Add new CV</span>
         </Button>
       </DialogTrigger>
       <DialogContent>

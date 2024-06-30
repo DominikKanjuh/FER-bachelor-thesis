@@ -69,7 +69,7 @@ const Dashboard = ({ cvs: _cvs }: { cvs?: CVType[] }) => {
         </div>
 
         <div className="flex justify-between items-center gap-4">
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-2">

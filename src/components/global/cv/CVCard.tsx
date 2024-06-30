@@ -23,21 +23,21 @@ const CVCard = ({ id, title, description, createdAt, modifiedAt, inTrash }: Prop
         <CardDescription className="line-clamp-3">{description ? description : '-'}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-2 text-sm">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <span className="text-muted-foreground">Created:</span>
           <span>{formatDateToTimeDate(createdAt)}</span>
         </div>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-3">
           <span className="text-muted-foreground">Modified:</span>
           <span>{formatDateToTimeDate(modifiedAt)}</span>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between gap-2">
+      <CardFooter className="flex justify-between gap-1">
         <DeleteCVButton cvId={id} inTrash={inTrash} />
         <Link href={`/dashboard/cv/${id}`}>
           <Button variant="secondary" size="sm">
             <Bot className="mr-2" size={'20'} />
-            Edit with AI
+            {inTrash ? 'Edit' : 'Edit with AI'}
           </Button>
         </Link>
       </CardFooter>
