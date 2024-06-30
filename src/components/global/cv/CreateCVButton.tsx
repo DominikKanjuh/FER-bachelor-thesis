@@ -21,7 +21,7 @@ import { toast } from '../../ui/use-toast';
 import { Input } from '../../ui/input';
 import Loader from '../Loader';
 import { FilePlus2 } from 'lucide-react';
-import { CVCreationSchema } from '@/lib';
+import { CVTitleDescriptionSchema } from '@/lib';
 
 import { createCV } from '@/lib/server-actions/cv-actions';
 import { CvInsertType } from '@/lib/drizzle/types';
@@ -29,7 +29,7 @@ import { CvInsertType } from '@/lib/drizzle/types';
 function CreateCVButton() {
   const router = useRouter();
   const form = useForm<CvInsertType>({
-    resolver: zodResolver(CVCreationSchema),
+    resolver: zodResolver(CVTitleDescriptionSchema),
   });
 
   async function onSubmit(values: CvInsertType) {
