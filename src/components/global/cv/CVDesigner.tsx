@@ -6,8 +6,8 @@ import { CVType, CvInsertType } from '@/lib/drizzle/types';
 import { useEffect, useRef, useState } from 'react';
 import { Designer } from '@pdfme/ui';
 import { Template, checkTemplate } from '@pdfme/common';
-import { text, line } from '@pdfme/schemas';
-import { getFontsData } from '@/lib/designer-utils';
+
+import { downloadPDF, getFontsData, getPlugins, previewPDF, getBlankTemplate } from '@/lib/designer-utils';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -25,61 +25,7 @@ import Loader from '../Loader';
 import { editCV } from '@/lib/server-actions/cv-actions';
 import { toast } from '@/components/ui/use-toast';
 import { CVTitleDescriptionSchema } from '@/lib/zod-schemas';
-import { getInputFromTemplate } from '@pdfme/common';
-import { generate } from '@pdfme/generator';
-
-const getBlankTemplate = () =>
-  ({ schemas: [{}], basePdf: { width: 210, height: 297, padding: [0, 0, 0, 0] } } as Template);
-
-export const getPlugins = () => {
-  return {
-    Text: text,
-    Line: line,
-  };
-};
-const generatePDF = async (currentRef: Designer | null) => {
-  if (!currentRef) return { pdf: null, blob: null };
-
-  const template = currentRef.getTemplate();
-  const inputs = getInputFromTemplate(template);
-  const font = await getFontsData();
-
-  const pdf = await generate({
-    template,
-    inputs,
-    options: { font, title: 'CV-Improver' },
-    plugins: getPlugins(),
-  });
-
-  const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-
-  return { pdf, blob };
-};
-
-export const previewPDF = async (currentRef: Designer | null) => {
-  if (!currentRef) return;
-
-  const { blob } = await generatePDF(currentRef);
-
-  if (blob) {
-    window.open(URL.createObjectURL(blob));
-  }
-};
-
-export const downloadPDF = async (currentRef: Designer | null, title: string) => {
-  if (!currentRef) return;
-
-  const { blob } = await generatePDF(currentRef);
-
-  if (blob) {
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = title + '.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-};
+import CVAISuggestion from './CVAISuggestion';
 
 const CVDesigner = ({ cv }: { cv: CVType }) => {
   const designerRef = useRef<HTMLDivElement | null>(null);
@@ -167,17 +113,18 @@ const CVDesigner = ({ cv }: { cv: CVType }) => {
       // @ts-ignore
       setPrevDesignerRef(designerRef);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [designerRef, prevDesignerRef]);
 
   return (
     <>
       <section className="flex p-6 gap-6 justify-between items-center">
-        <div className="flex gap-6 max-w-[40%]">
+        <div className="flex gap-6 max-w-[40%] items-center">
           <div>
-            <h1>
+            <h1 className="line-clamp-1">
               <strong>Title:</strong> {cv.title}
             </h1>
-            <h2>
+            <h2 className="line-clamp-1">
               <strong>Description: </strong>
               {cv.description}
             </h2>
@@ -236,6 +183,9 @@ const CVDesigner = ({ cv }: { cv: CVType }) => {
             </DialogContent>
           </Dialog>
         </div>
+        <div className="flex gap-2 max-w-[30%]">
+          <CVAISuggestion cv={cv} />
+        </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => previewPDF(designer.current)}>
             Preview
@@ -244,11 +194,11 @@ const CVDesigner = ({ cv }: { cv: CVType }) => {
             Save
           </Button>
           <Button variant="default" onClick={() => downloadPDF(designer.current, cv.title)}>
-            Download{' '}
+            Download
           </Button>
         </div>
       </section>
-      <div ref={designerRef} style={{ width: '100%', height: `calc(100vh - ${70}px)` }} />
+      <div ref={designerRef} style={{ width: '100%', height: `calc(100vh - ${156}px)` }} />
     </>
   );
 };
