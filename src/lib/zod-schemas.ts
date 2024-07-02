@@ -38,3 +38,12 @@ export const CVFieldSchema = z.object({
   fontFamily: PDFFontSchema.nullable(), // PDFFont
   fontColor: z.string().min(4).max(7).regex(/^#/).nullable(), // hex color
 });
+
+export const AISuggestionGeneralSchema = z.object({
+  input: z.string(),
+});
+
+export const AISuggestionJobApplicationSchema = z.object({
+  input: z.string(),
+  jobDescription: z.string().min(1, { message: 'Job Description is required. ' }),
+});

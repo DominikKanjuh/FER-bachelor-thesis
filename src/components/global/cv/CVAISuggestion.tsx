@@ -1,21 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CVType } from '@/lib/drizzle/types';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-
-enum AISuggestionType {
-  General = 'General',
-  JobApplication = 'JobApplication',
-}
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Chat } from '../chat';
+import { AISuggestionType } from '@/lib/types';
 
 const getTextContent = (content: any) => {
   // @ts-ignore
@@ -52,8 +41,7 @@ const getTextContent = (content: any) => {
 const CVAISuggestion = ({ cv }: { cv: CVType }) => {
   const content = cv.content;
   // @ts-ignore
-  const textContent: string = getTextContent(content?.schemas);
-  console.log(textContent);
+  const cvTextContent: string = getTextContent(content?.schemas);
 
   return (
     <Sheet>
@@ -80,18 +68,14 @@ const CVAISuggestion = ({ cv }: { cv: CVType }) => {
                 Job Application
               </TabsTrigger>
             </TabsList>
-            <TabsContent value={AISuggestionType.General} className="h-[calc(100vh-252px)]"></TabsContent>
-            <TabsContent value={AISuggestionType.JobApplication} className="h-[calc(100vh-252px)]">
-              <Textarea rows={4} placeholder="Paste your job description here!" />
+            <TabsContent value={AISuggestionType.General} className="h-[calc(100vh-204px)] overflow-y-auto">
+              <Chat type={AISuggestionType.General} cvContent={cvTextContent} />
+            </TabsContent>
+            <TabsContent value={AISuggestionType.JobApplication} className="h-[calc(100vh-204px)] overflow-y-auto">
+              <Chat type={AISuggestionType.JobApplication} cvContent={cvTextContent} />
             </TabsContent>
           </Tabs>
         </div>
-        <SheetFooter>
-          <Button type="submit" className="w-full mt-4">
-            {/* {!form.formState.isSubmitting && <span>Generate</span>}
-            {form.formState.isSubmitting && <Loader />} */}
-          </Button>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

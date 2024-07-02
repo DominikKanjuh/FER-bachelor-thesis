@@ -15,6 +15,7 @@
     "up": "drizzle-kit up:pg"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.34",
     "@hookform/resolvers": "^3.6.0",
     "@pdfme/common": "^4.0.2",
     "@pdfme/generator": "^4.0.2",
@@ -30,6 +31,7 @@
     "@radix-ui/react-toggle": "^1.1.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.43.5",
+    "ai": "^3.2.16",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
@@ -37,6 +39,8 @@
     "lucide-react": "^0.394.0",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
+    "openai": "^4.52.2",
+    "openai-edge": "^1.2.2",
     "pdf-lib": "^1.17.1",
     "postgres": "^3.4.4",
     "react": "^18.3.1",
