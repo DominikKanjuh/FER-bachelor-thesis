@@ -1,11 +1,5 @@
-import { Configuration, OpenAIApi } from 'openai-edge';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
+import { openai } from '@ai-sdk/openai';
+import { streamText } from 'ai';
 
 export const runtime = 'edge';
 
@@ -36,17 +30,13 @@ const fixedPrompt = {
 };
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
-  const modifiedMessages = [fixedPrompt, ...messages];
+  const { prompt }: { prompt: string } = await req.json();
 
-  const response = await openai.createChatCompletion({
-    model: 'gpt-4o',
-    stream: true,
-    temperature: 0.8,
-    messages: modifiedMessages,
+  const result = await streamText({
+    model: openai('gpt-4o'),
+    system: fixedPrompt.content,
+    prompt: prompt,
   });
 
-  const stream = OpenAIStream(response);
-
-  return new StreamingTextResponse(stream);
+  return result.toAIStreamResponse();
 }

@@ -1,20 +1,19 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+
 import { Textarea } from '@/components/ui/textarea';
 import { AISuggestionType } from '@/lib/types';
-import { AISuggestionGeneralSchema } from '@/lib/zod-schemas';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useChat } from 'ai/react';
-import { useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+
+import { useCompletion } from 'ai/react';
+import { useEffect, useRef, useState } from 'react';
+
 import Loader from '../Loader';
+import Markdown from 'react-markdown';
 
 const Chat = ({ type, cvContent }: { type: AISuggestionType; cvContent: string }) => {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: '/api/openai',
+  const { completion, complete, isLoading } = useCompletion({
+    api: '/api/ai',
   });
 
   const chatContainerRef = useRef<React.ElementRef<'div'>>(null);
@@ -28,42 +27,38 @@ const Chat = ({ type, cvContent }: { type: AISuggestionType; cvContent: string }
 
   useEffect(() => {
     scroll();
-  }, [messages]);
+  }, [completion]);
 
-  const form = useForm<z.infer<typeof AISuggestionGeneralSchema>>({
-    mode: 'onChange',
-    resolver: zodResolver(AISuggestionGeneralSchema),
-    defaultValues: { input: cvContent },
-  });
+  const [jobApplication, setJobApplication] = useState<string | null>(null);
 
-  const isLoading = form.formState.isSubmitting;
+  const handleAISuggestion = async () => {
+    let promptText = '';
+
+    if (jobApplication) {
+      promptText += `Job application ${jobApplication} `;
+    }
+
+    promptText = `CV content: ${cvContent}`;
+
+    await complete(promptText);
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="h-full">
-        <div className="h-[calc(100vh-260px)]" ref={chatContainerRef}>
-          {type === AISuggestionType.JobApplication && (
-            <Textarea
-              rows={4}
-              placeholder="Paste your job description here!"
-              value={input}
-              onChange={handleInputChange}
-            />
-          )}
-          <div>
-            {messages.map((message, index) => (
-              <div key={message.id} className="w-full">
-                <p>{message.content}</p>
-                {index < messages.length - 1 && <Separator />}
-              </div>
-            ))}
-          </div>
-        </div>
-        <Button type="submit" className="w-full mt-4">
-          {!isLoading ? <span>Get Suggestions</span> : <Loader />}
-        </Button>
+    <div className="h-full">
+      <div className="h-[calc(100vh-232px)] overflow-y-auto" ref={chatContainerRef}>
+        {type === AISuggestionType.JobApplication && (
+          <Textarea
+            rows={4}
+            placeholder="Paste your job description here!"
+            onChange={(e) => setJobApplication(e.currentTarget.value)}
+          />
+        )}
+        <Markdown>{completion}</Markdown>
       </div>
-    </form>
+      <Button className="w-full mt-4" onClick={handleAISuggestion}>
+        {!isLoading ? <span>Get Suggestions</span> : <Loader />}
+      </Button>
+    </div>
   );
 };
 

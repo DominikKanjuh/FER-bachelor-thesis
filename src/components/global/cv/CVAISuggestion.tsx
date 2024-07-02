@@ -50,7 +50,7 @@ const CVAISuggestion = ({ cv }: { cv: CVType }) => {
           Get AI Suggestions
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[600px]">
+      <SheetContent className="w-[800px]">
         <SheetHeader>
           <SheetTitle>Generate AI Suggestions</SheetTitle>
           <SheetDescription>
@@ -68,10 +68,10 @@ const CVAISuggestion = ({ cv }: { cv: CVType }) => {
                 Job Application
               </TabsTrigger>
             </TabsList>
-            <TabsContent value={AISuggestionType.General} className="h-[calc(100vh-204px)] overflow-y-auto">
+            <TabsContent value={AISuggestionType.General} className="h-[calc(100vh-176px)] overflow-y-auto">
               <Chat type={AISuggestionType.General} cvContent={cvTextContent} />
             </TabsContent>
-            <TabsContent value={AISuggestionType.JobApplication} className="h-[calc(100vh-204px)] overflow-y-auto">
+            <TabsContent value={AISuggestionType.JobApplication} className="h-[calc(100vh-176px)] overflow-y-auto">
               <Chat type={AISuggestionType.JobApplication} cvContent={cvTextContent} />
             </TabsContent>
           </Tabs>
