@@ -50,6 +50,7 @@ const CVAISuggestion = ({ cv }: { cv: CVType }) => {
           Get AI Suggestions
         </Button>
       </SheetTrigger>
+
       <SheetContent className="w-[800px]">
         <SheetHeader>
           <SheetTitle>Generate AI Suggestions</SheetTitle>
