@@ -1,15 +1,17 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { useEffect, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+
 import { AISuggestionType } from '@/lib/types';
 
 import { useCompletion } from 'ai/react';
-import { useEffect, useRef, useState } from 'react';
 
 import Loader from '../Loader';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const Chat = ({ type, cvContent }: { type: AISuggestionType; cvContent: string }) => {
   const { completion, complete, isLoading } = useCompletion({
@@ -38,7 +40,7 @@ const Chat = ({ type, cvContent }: { type: AISuggestionType; cvContent: string }
       promptText += `Job application ${jobApplication} `;
     }
 
-    promptText = `CV content: ${cvContent}`;
+    promptText += `CV content: ${cvContent}`;
 
     await complete(promptText);
   };
@@ -53,9 +55,11 @@ const Chat = ({ type, cvContent }: { type: AISuggestionType; cvContent: string }
             onChange={(e) => setJobApplication(e.currentTarget.value)}
           />
         )}
-        <Markdown>{completion}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} className={'whitespace-pre-wrap'}>
+          {completion}
+        </Markdown>
       </div>
-      <Button className="w-full mt-4" onClick={handleAISuggestion}>
+      <Button className="w-full mt-4" onClick={handleAISuggestion} disabled={isLoading}>
         {!isLoading ? <span>Get Suggestions</span> : <Loader />}
       </Button>
     </div>

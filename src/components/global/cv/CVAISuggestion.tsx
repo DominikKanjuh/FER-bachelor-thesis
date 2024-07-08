@@ -7,6 +7,8 @@ import { Chat } from '../chat';
 import { AISuggestionType } from '@/lib/types';
 
 const getTextContent = (content: any) => {
+  if (!content) return;
+
   // @ts-ignore
   return (
     content
@@ -39,14 +41,14 @@ const getTextContent = (content: any) => {
 };
 
 const CVAISuggestion = ({ cv }: { cv: CVType }) => {
-  const content = cv.content;
   // @ts-ignore
-  const cvTextContent: string = getTextContent(content?.schemas);
+  const cvTextContent: string = getTextContent(cv?.content?.schemas);
+  console.log('cv', cvTextContent);
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={'default'} disabled={!content}>
+        <Button variant={'default'} disabled={!cv.content}>
           Get AI Suggestions
         </Button>
       </SheetTrigger>
