@@ -17,7 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, ...pr
   const inputType = type === 'password' && showPassword ? 'text' : type;
 
   return (
-    <div className="relative">
+    <div className={cn('relative', className)}>
       <input
         type={inputType}
         className={cn(
