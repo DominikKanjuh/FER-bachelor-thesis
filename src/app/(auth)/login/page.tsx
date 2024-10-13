@@ -1,45 +1,54 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginSchema } from '@/lib/zod-schemas';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import Link from 'next/link';
-import Image from 'next/image';
-import Logo from '../../../../public/CV-improver.svg';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import Loader from '@/components/global/Loader';
-import { actionLoginUser } from '@/lib/server-actions/auth-actions';
+"use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/lib/zod-schemas";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import Link from "next/link";
+import Image from "next/image";
+import Logo from "../../../../public/CV-improver.svg";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Loader from "@/components/global/Loader";
+import { actionLoginUser } from "@/lib/server-actions/auth-actions";
 
 const LoginPage = () => {
   const router = useRouter();
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
 
   const form = useForm<z.infer<typeof LoginSchema>>({
-    mode: 'onChange',
+    mode: "onChange",
     resolver: zodResolver(LoginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: "", password: "" },
   });
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = async (formData) => {
+  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = async (
+    formData
+  ) => {
     const { error } = await actionLoginUser(formData);
     if (error) {
       form.reset();
       setSubmitError(error.message);
     }
-    router.replace('/dashboard');
+    router.replace("/dashboard");
   };
 
   return (
     <Form {...form}>
       <form
         onChange={() => {
-          if (submitError) setSubmitError('');
+          if (submitError) setSubmitError("");
         }}
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full sm:justify-center sm:w-[400px] space-y-6 flex flex-col"
@@ -93,14 +102,26 @@ const LoginPage = () => {
           )}
         />
         {submitError && <FormMessage>{submitError}</FormMessage>}
-        <Button type="submit" className="w-full p-6" size="lg" disabled={isLoading}>
-          {!isLoading ? 'Login' : <Loader />}
+        <Button
+          type="submit"
+          className="w-full p-6"
+          size="lg"
+          disabled={isLoading}
+        >
+          {!isLoading ? "Login" : <Loader />}
         </Button>
         <span className="self-container">
-          Dont have an account?{' '}
+          Dont have an account?{" "}
           <Link href="/signup" className="text-primary">
             Sign Up
           </Link>
+        </span>
+        <span className="text-foreground/60">
+          Public user profile used for login:
+          <br />
+          Email: user@cv-improver.com
+          <br />
+          Password: password123
         </span>
       </form>
     </Form>

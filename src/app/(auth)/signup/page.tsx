@@ -61,7 +61,6 @@ const Signup = () => {
     password,
   }: z.infer<typeof SignUpFormSchema>) => {
     const { error } = await actionSignUpUser({ email, password });
-    console.log(error);
 
     if (error) {
       toast({
