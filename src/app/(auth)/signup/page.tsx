@@ -1,72 +1,88 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+"use client";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import Logo from '../../../../public/CV-improver.svg';
-import Loader from '@/components/global/Loader';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { MailCheck } from 'lucide-react';
-import { actionSignUpUser } from '@/lib/server-actions/auth-actions';
-import { SignUpFormSchema } from '@/lib/zod-schemas';
-import { toast } from '@/components/ui/use-toast';
+import Logo from "../../../../public/CV-improver.svg";
+import Loader from "@/components/global/Loader";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { MailCheck } from "lucide-react";
+import { actionSignUpUser } from "@/lib/server-actions/auth-actions";
+import { SignUpFormSchema } from "@/lib/zod-schemas";
+import { toast } from "@/components/ui/use-toast";
 
 const Signup = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
   const [confirmation, setConfirmation] = useState(false);
 
   const codeExchangeError = useMemo(() => {
-    if (!searchParams) return '';
-    return searchParams.get('error_description');
+    if (!searchParams) return "";
+    return searchParams.get("error_description");
   }, [searchParams]);
 
   const confirmationAndErrorStyles = useMemo(
     () =>
-      clsx('bg-primary', {
-        'bg-red-500/10': codeExchangeError,
-        'border-red-500/50': codeExchangeError,
-        'text-red-700': codeExchangeError,
+      clsx("bg-primary", {
+        "bg-red-500/10": codeExchangeError,
+        "border-red-500/50": codeExchangeError,
+        "text-red-700": codeExchangeError,
       }),
     [codeExchangeError]
   );
 
   const form = useForm<z.infer<typeof SignUpFormSchema>>({
-    mode: 'onChange',
+    mode: "onChange",
     resolver: zodResolver(SignUpFormSchema),
-    defaultValues: { email: '', password: '', confirmPassword: '' },
+    defaultValues: { email: "", password: "", confirmPassword: "" },
   });
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async ({ email, password }: z.infer<typeof SignUpFormSchema>) => {
+  const onSubmit = async ({
+    email,
+    password,
+  }: z.infer<typeof SignUpFormSchema>) => {
     const { error } = await actionSignUpUser({ email, password });
+    console.log(error);
+
     if (error) {
       toast({
-        title: 'Error',
+        title: "Error",
         description: error.message,
-        variant: 'destructive',
+        variant: "destructive",
       });
       setSubmitError(error.message);
       form.reset();
       return;
     }
+
     setConfirmation(true);
+    router.replace("/login");
   };
 
   return (
     <Form {...form}>
       <form
         onChange={() => {
-          if (submitError) setSubmitError('');
+          if (submitError) setSubmitError("");
         }}
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full sm:justify-center sm:w-[400px]
@@ -131,21 +147,25 @@ const Signup = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input type="password" placeholder="Confirm Password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Confirm Password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit" className="w-full p-6" disabled={isLoading}>
-              {!isLoading ? 'Create Account' : <Loader />}
+              {!isLoading ? "Create Account" : <Loader />}
             </Button>
           </>
         )}
 
         {submitError && <FormMessage>{submitError}</FormMessage>}
         <span className="self-container">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/login" className="text-primary">
             Login
           </Link>
@@ -154,8 +174,12 @@ const Signup = () => {
           <>
             <Alert className={confirmationAndErrorStyles}>
               {!codeExchangeError && <MailCheck className="h-4 w-4" />}
-              <AlertTitle>{codeExchangeError ? 'Invalid Link' : 'Check your email.'}</AlertTitle>
-              <AlertDescription>{codeExchangeError || 'An email confirmation has been sent.'}</AlertDescription>
+              <AlertTitle>
+                {codeExchangeError ? "Invalid Link" : "Check your email."}
+              </AlertTitle>
+              <AlertDescription>
+                {codeExchangeError || "An email confirmation has been sent."}
+              </AlertDescription>
             </Alert>
           </>
         )}
