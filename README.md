@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CV-Improver: Resume Builder and Optimizer with AI Suggestions
 
-## Getting Started
+**CV-Improver** is a web application that allows users to create, edit, and export resumes, while optimizing them for Applicant Tracking Systems (ATS) using AI-generated suggestions. The goal of this app is to help users increase their chances of passing through ATS filters by providing both general and personalized improvements based on the content of their resume.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Create and Edit Resumes**: Users can easily create, edit, and manage resumes through an intuitive interface.
+- **AI Suggestions**: The app uses OpenAI's GPT model to provide both general and personalized tips to improve resume content and structure, focusing on ATS compatibility.
+- **Export Resumes**: Users can export their resumes in PDF format after editing and optimizing them.
+- **ATS Optimization**: AI-driven suggestions are designed to enhance keyword relevance, structure, and formatting for better ranking in ATS systems.
+- **Personalized Feedback**: Based on specific job descriptions or overall resume content, AI suggestions include grammar improvements, keyword optimization, and content enhancement.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+  - [React](https://reactjs.org/)
+  - [Next.js](https://nextjs.org/)
+  - [TypeScript](https://www.typescriptlang.org/)
+  - [Shadcn-UI](https://ui.shadcn.com/)
+  - [Tailwind CSS](https://tailwindcss.com/)
 
-## Learn More
+- **Backend and Database**:
 
-To learn more about Next.js, take a look at the following resources:
+  - [Supabase](https://supabase.com/) for database and authentication
+  - [Drizzle ORM](https://orm.drizzle.team/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **AI Integration**:
+  - [OpenAI API](https://platform.openai.com/docs/overview) for generating resume improvement suggestions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## How It Works
 
-## Deploy on Vercel
+1. **Resume Creation**: Users start by entering details for their resume using an intuitive drag-and-drop interface, allowing customization of text fields, formatting, and layout.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **AI Suggestions**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   - Users can request general tips or personalized feedback based on job descriptions.
+   - Suggestions include keyword optimization for ATS, grammatical corrections, and structure improvements.
+
+3. **Export**: Once the resume is optimized, users can export it in PDF format, ready to be used in job applications.
+
+## Project Setup
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- Supabase account for database setup
+- OpenAI API key for generating AI suggestions
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/DominikKanjuh/FER-bachelor-thesis
+   cd FER-bachelor-thesis
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Set up environment variables:
+
+   - Create a `.env` file in the root directory by copying the `.env.example`
+   - Add the following variables:
+
+     ```bash
+        DATABASE_URL=
+        NEXT_PUBLIC_SUPABASE_URL=
+        NEXT_PUBLIC_SUPABASE_ANON_KEY=
+        SERVICE_ROLE_KEY=
+        PW=
+        NEXT_PUBLIC_SITE_URL=
+        OPENAI_API_KEY=
+     ```
+
+4. Start the development server:
+
+   ```bash
+   pnpm dev
+   ```
+
+5. Open the app in your browser at `http://localhost:3000`.
+
+### Deployment
+
+- You can easily deploy this app using [Vercel](https://vercel.com/) (Next.js's deployment platform) or any other hosting service that supports Next.js.
+- Supabase setup and API integration must be configured on the deployed environment.
+
+## AI Suggestions Details
+
+The AI integration is powered by the OpenAI API, specifically configured for providing feedback on:
+
+- **ATS Compatibility**: Ensuring resume format is readable by ATS systems.
+- **Keyword Optimization**: Adding industry-specific keywords relevant to job descriptions.
+- **Content Enhancement**: Improving job descriptions, making experiences and achievements more impactful.
+- **Grammar and Formatting**: Identifying and correcting grammatical mistakes and ensuring proper formatting.
+
+### AI Prompt Configuration
+
+The prompt used for generating AI suggestions is located in the following file: `src/app/api/ai/route.ts`
