@@ -101,4 +101,12 @@ The AI integration is powered by the OpenAI API, specifically configured for pro
 
 ### AI Prompt Configuration
 
-The prompt used for generating AI suggestions is located in the following file: `src/app/api/ai/route.ts`
+[The prompt used for generating AI](./src/app/api/ai/route.ts) suggestions is located in the following file: `src/app/api/ai/route.ts`
+
+## Full Thesis Paper
+
+You can find [the full bachelor thesis](./paper-HR.pdf), written in Croatian, in the following file:
+
+`./paper-HR.pdf`
+
+The thesis provides an in-depth explanation of the problem, the solution, and the technologies used to develop **CV-Improver**, along with detailed analysis and results.
